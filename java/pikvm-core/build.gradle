@@ -1,0 +1,14 @@
+plugins {
+    id 'java-library'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+dependencies {
+    api 'com.squareup.okhttp3:okhttp:4.12.0'
+    api 'com.google.code.gson:gson:2.10.1'
+}
