@@ -192,6 +192,24 @@ public class PiKvmClient implements AutoCloseable {
         return getStreamerSnapshot(outputFile, false);
     }
 
+    /**
+     * Returns the {@link org.pikvm.webrtc.WebRtcSignalingClient} used to negotiate
+     * a WebRTC peer connection with this PiKVM device.
+     *
+     * <p>Typical usage (desktop):
+     * <pre>{@code
+     * WebRtcSignalingClient signaling = pikvm.getWebRtcSignalingClient();
+     * // build SDP offer via WebRTC library …
+     * WebRtcSessionDescription answer = signaling.negotiate(sdpOffer, true, true);
+     * // set answer as remote description, then:
+     * signaling.startIceCandidateListener(candidate -> peerConnection.addIceCandidate(…));
+     * }</pre>
+     * </p>
+     */
+    public org.pikvm.webrtc.WebRtcSignalingClient getWebRtcSignalingClient() {
+        return streamer.getWebRtcSignalingClient();
+    }
+
     // ── Mouse delegates ───────────────────────────────────────────────────
 
     /**

@@ -7,6 +7,7 @@ import org.pikvm.endpoint.BaseEndpoint;
 import org.pikvm.exception.PiKvmNetworkException;
 import org.pikvm.exception.PiKvmStreamException;
 import org.pikvm.http.PiKvmHttpClient;
+import org.pikvm.webrtc.WebRtcSignalingClient;
 import org.pikvm.websocket.PiKvmWebSocketClient;
 
 import java.io.File;
@@ -21,6 +22,19 @@ import java.util.logging.Logger;
  * Equivalent to {@code PiKVMStreamer} in Python. Provides snapshot capture
  * as raw bytes (platform-agnostic) and optional file-based snapshots.
  * </p>
+ *
+ * <p>For live video streaming, choose between two modes:
+ * <ul>
+ *   <li><strong>MJPEG</strong> – use {@link org.pikvm.streamer.StreamerClient} together with
+ *       a dedicated MJPEG stream reader (e.g. {@code MjpegStreamReceiver} in
+ *       the {@code pikvm-swing-demo} module).</li>
+ *   <li><strong>WebRTC</strong> – obtain the {@link WebRtcSignalingClient} via
+ *       {@link #getWebRtcSignalingClient()} to negotiate the peer connection,
+ *       then use a WebRTC peer-connection implementation to receive bidirectional
+ *       video and audio (see {@code WebRtcStreamReceiver} in the
+ *       {@code pikvm-desktop} module).</li>
+ * </ul>
+ * </p>
  */
 public class StreamerClient extends BaseEndpoint {
 
@@ -29,11 +43,13 @@ public class StreamerClient extends BaseEndpoint {
     private static final String SNAPSHOT_PATH   = "/api/streamer/snapshot";
     private static final Gson   GSON            = new Gson();
 
-    private PiKvmWebSocketClient wsClient;
+    private PiKvmWebSocketClient  wsClient;
+    private WebRtcSignalingClient webRtcSignalingClient;
 
     public StreamerClient(PiKvmHttpClient httpClient, PiKvmWebSocketClient wsClient) {
         super(httpClient);
-        this.wsClient = wsClient;
+        this.wsClient              = wsClient;
+        this.webRtcSignalingClient = new WebRtcSignalingClient(httpClient, wsClient);
     }
 
     // ── State ────────────────────────────────────────────────────────────
@@ -103,9 +119,18 @@ public class StreamerClient extends BaseEndpoint {
     /** Attaches (or replaces) the WebSocket client used for streamer events. */
     public void setWsClient(PiKvmWebSocketClient wsClient) {
         this.wsClient = wsClient;
+        webRtcSignalingClient.setWsClient(wsClient);
     }
 
     public PiKvmWebSocketClient getWsClient() { return wsClient; }
+
+    /**
+     * Returns the {@link WebRtcSignalingClient} for this streamer.
+     *
+     * <p>Use this to negotiate a WebRTC peer connection with the PiKVM device
+     * for bidirectional video and audio streaming.</p>
+     */
+    public WebRtcSignalingClient getWebRtcSignalingClient() { return webRtcSignalingClient; }
 
     // ── Snapshot ─────────────────────────────────────────────────────────
 
