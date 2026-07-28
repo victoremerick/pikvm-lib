@@ -57,7 +57,7 @@ public class MsdClient extends BaseEndpoint {
             if (!resp.isSuccessful()) {
                 throw new PiKvmApiException("MSD upload failed: " + resp.code(), resp.code());
             }
-            LOGGER.warning("Image " + name + " uploaded");
+            LOGGER.info("Image " + name + " uploaded");
         } catch (IOException e) {
             throw new PiKvmNetworkException("Failed to upload MSD image", e);
         }
@@ -140,6 +140,6 @@ public class MsdClient extends BaseEndpoint {
 
     private void controlMsd(boolean connected) {
         httpClient.postsInt(SET_CONN_PATH, "connected", connected ? 1 : 0, Set.of(0, 1));
-        LOGGER.warning("MSD " + (connected ? "connected" : "disconnected") + "!");
+        LOGGER.info("MSD " + (connected ? "connected" : "disconnected"));
     }
 }

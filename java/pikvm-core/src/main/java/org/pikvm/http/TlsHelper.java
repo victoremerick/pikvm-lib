@@ -24,7 +24,13 @@ public final class TlsHelper {
      * Configures the OkHttp builder to accept any TLS certificate.
      * Equivalent to Python websocket-client {@code sslopt={"cert_reqs": ssl.CERT_NONE}}
      * and {@code requests.packages.urllib3.disable_warnings()}.
+     *
+     * <p><strong>Risk:</strong> disables certificate chain and hostname validation; the
+     * caller is responsible for ensuring the network path to the PiKVM device is trusted
+     * (e.g. local LAN or VPN). This mode is intentionally supported in production to
+     * accommodate PiKVM devices with factory self-signed certificates.
      */
+    @SuppressWarnings("java:S4830") // TrustManager accepting all certs is intentional – see Javadoc
     public static OkHttpClient.Builder trustAllCerts(OkHttpClient.Builder builder) {
         try {
             X509TrustManager trustAll = new X509TrustManager() {

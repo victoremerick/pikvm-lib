@@ -157,7 +157,7 @@ public class StreamerClient extends BaseEndpoint {
         } catch (IOException e) {
             throw new PiKvmNetworkException("Failed to write snapshot to file", e);
         }
-        LOGGER.info("Writing snapshot to: " + outputFile.getAbsolutePath());
+        LOGGER.info("Wrote snapshot to: " + outputFile.getAbsolutePath());
         return outputFile;
     }
 
