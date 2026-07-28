@@ -144,8 +144,20 @@ public class PiKvmSwingApp extends JFrame {
         p.add(disconnectBtn);
         p.add(statusLabel);
 
+        JButton rdBtn = new JButton("🖥 Remote Desktop");
+        rdBtn.setToolTipText("Open live 30+ FPS stream with full mouse & keyboard control");
+        rdBtn.addActionListener(e -> {
+            if (client == null) {
+                log("Not connected – connect first.");
+                return;
+            }
+            RemoteDesktopWindow.open(client, hostField.getText().trim());
+        });
+
         connectBtn.addActionListener(e -> doConnect());
         disconnectBtn.addActionListener(e -> doDisconnect());
+
+        p.add(rdBtn);
 
         return p;
     }
