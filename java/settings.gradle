@@ -1,0 +1,6 @@
+rootProject.name = 'pikvm-lib-java'
+include ':pikvm-core'
+include ':pikvm-android'
+include ':pikvm-desktop'
+include ':pikvm-tests'
+include ':pikvm-swing-demo'

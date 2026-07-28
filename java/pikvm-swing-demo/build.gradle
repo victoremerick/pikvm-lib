@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+application {
+    mainClass = 'org.pikvm.demo.PiKvmSwingApp'
+}
+
+dependencies {
+    implementation project(':pikvm-desktop')
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'org.pikvm.demo.PiKvmSwingApp'
+    }
+    dependsOn configurations.runtimeClasspath
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}

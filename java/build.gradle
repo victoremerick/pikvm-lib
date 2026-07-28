@@ -1,0 +1,8 @@
+allprojects {
+    group = 'org.pikvm'
+    version = '0.1.0'
+
+    repositories {
+        mavenCentral()
+    }
+}
